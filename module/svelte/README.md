@@ -53,6 +53,23 @@ helper that nothing else uses any more.
   handler per control, typed by its props.
 - **No DOM editing.** A row that shows or hides becomes an `{#if}`.
 
+## Converted so far
+
+| application              | where                                                |
+| ------------------------ | ---------------------------------------------------- |
+| Quick roll settings      | `module/token/quick-roll-settings.ts`                |
+| Slam calculator          | `module/chat/slam-calculator-app.ts`                 |
+| Move mode editor         | `module/actor/move-mode-editor.ts`                   |
+| Split DR editor          | `module/actor/splitdr-editor.ts`                     |
+| Changelog window         | `lib/change-log.ts`                                  |
+| PDF settings             | `module/pdf/settings.ts`                             |
+| Module settings          | `module/utilities/gurps-settings-application.ts`     |
+| Modifier bucket journals | `module/modifier-bucket/select-journals.ts`          |
+| Resource tracker editor  | `module/resource-tracker/resource-tracker-editor.ts` |
+
+Everything else is still Handlebars, and still works. The character sheets are the big remaining
+piece; they are worth converting a panel at a time rather than in one go.
+
 ## Rules
 
 - Runes only: `$state`, `$derived`, `$props`, `$effect`. A `$effect` that subscribes to a Foundry
