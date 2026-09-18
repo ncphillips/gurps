@@ -1,15 +1,14 @@
 // BACKPORTED from v1.0.0
 
+import { SvelteApplication } from '../svelte/svelte-application.ts'
+import GurpsSettingsForm from './GurpsSettings.svelte'
+import { settingUpdates, settingsForModule, type SettingEntry } from './settings-view.ts'
+
 // define an object with two fields: title and icon.
 type GurpsSettingsConfig = {
   title: string // Title of the Settings window.
   module: string // Name of the GURPS module.
   icon?: string // Icon to display in the title bar.
-}
-
-type SettingEntry<Field extends foundry.data.fields.DataField> = {
-  value?: foundry.data.fields.DataField.PersistedTypeFor<Field>
-  field?: Field
 }
 
 /**
@@ -27,11 +26,10 @@ type SettingEntry<Field extends foundry.data.fields.DataField> = {
  * For example, if the module is "damage", a setting with ID "useArmorDivisor" would be registered as
  * `gurps.damage.useArmorDivisor`.
  */
-export class GurpsSettingsApplication extends foundry.applications.api.HandlebarsApplicationMixin(
-  foundry.applications.api.ApplicationV2
-) {
-  constructor(config: GurpsSettingsConfig, options?: any) {
+export class GurpsSettingsApplication extends SvelteApplication {
+  constructor(config: GurpsSettingsConfig, options?: object) {
     super(options)
+
     this._title = config.title
     this._module = config.module
     this.options.window.icon = config.icon ?? 'fa-solid fa-gears'
@@ -46,106 +44,88 @@ export class GurpsSettingsApplication extends foundry.applications.api.Handlebar
 
   static override DEFAULT_OPTIONS = {
     classes: ['gga', 'standard-form'],
-    form: {
-      closeOnSubmit: true,
-      handler: GurpsSettingsApplication.update,
-    },
     id: 'gga-settings',
     position: {
       width: 600,
       height: 600,
     },
-    tag: 'form',
     window: {
       resizable: true,
       icon: 'fa-light fa-face-head-bandage',
     },
   }
 
-  static override PARTS = {
-    main: {
-      scrollable: ['settings-list'],
-      template: 'systems/gurps/templates/settings.hbs',
-    },
+  override component = () => GurpsSettingsForm
+
+  override props = () => ({
+    entries: this.#entries(),
+    onsave: (form: HTMLFormElement) => void this.#save(form),
+  })
+
+  /**
+   * The module's settings, each paired with a `DataField` that can draw it.
+   *
+   * A setting registered the old way names a constructor -- `Boolean`, `Number`, a string with
+   * `choices` -- rather than a field, so those are converted here; the window then has one kind of
+   * thing to render regardless of how the setting was declared.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  #entries(): SettingEntry<any>[] {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const settings = settingsForModule(game.settings!.settings.values() as Iterable<any>, this._module)
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return settings.map((setting: any) => {
+      const field = this.#fieldFor(setting)
+
+      field.name = `${setting.namespace}.${setting.key}`
+      field.label ||= game.i18n!.localize(setting.name ?? '')
+      field.hint ||= game.i18n!.localize(setting.hint ?? '')
+
+      return { field, value: game.settings!.get(GURPS.SYSTEM_NAME, setting.key) }
+    })
   }
 
-  protected override async _prepareContext(
-    options: foundry.applications.api.ApplicationV2.RenderOptions & { isFirstRender: boolean }
-  ): Promise<foundry.applications.api.ApplicationV2.RenderContext> {
-    const context = await super._prepareContext(options)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  #fieldFor(setting: any): any {
+    if (setting.type instanceof foundry.data.fields.DataField) return setting.type
 
-    const settings =
-      (Array.from(game.settings!.settings.values()).filter((settingEntry: any) =>
-        settingEntry.id.startsWith(`gurps.${this._module}.`)
-      ) as any) || []
-
-    // @ts-expect-error: missing types
-    const entries: SettingEntry[] = []
-
-    // go through all settings, and convert them to modern data fields if not already converted.
-    // also, collect values and localized labels and hints.
-    for (const setting of settings) {
-      // @ts-expect-error: missing types
-      const entry: SettingEntry = { value: game.settings!.get(GURPS.SYSTEM_NAME, setting.key as any) }
-
-      if (setting.type instanceof foundry.data.fields.DataField) {
-        entry.field = setting.type
-      } else if (setting.type === Boolean) {
-        entry.field = new foundry.data.fields.BooleanField({ initial: setting.default ?? false })
-      } else if (setting.type === Number) {
-        const { min, max, step } = setting.range ?? {}
-
-        entry.field = new foundry.data.fields.NumberField({
-          required: true,
-          choices: setting.choices,
-          initial: setting.default,
-          min,
-          max,
-          step,
-        })
-      } else {
-        entry.field = new foundry.data.fields.StringField({
-          required: true,
-          nullable: false,
-          choices: setting.choices,
-          initial: setting.default,
-        })
-      }
-
-      entry.field!.name = `${setting.namespace}.${setting.key}`
-      entry.field!.label ||= game.i18n!.localize(setting.name ?? '')
-      entry.field!.hint ||= game.i18n!.localize(setting.hint ?? '')
-
-      entries.push(entry)
+    if (setting.type === Boolean) {
+      return new foundry.data.fields.BooleanField({ initial: setting.default ?? false })
     }
 
-    const result = foundry.utils.mergeObject(context, {
-      entries,
-    })
+    if (setting.type === Number) {
+      const { min, max, step } = setting.range ?? {}
 
-    return result
+      return new foundry.data.fields.NumberField({
+        required: true,
+        choices: setting.choices,
+        initial: setting.default,
+        min,
+        max,
+        step,
+      })
+    }
+
+    return new foundry.data.fields.StringField({
+      required: true,
+      nullable: false,
+      choices: setting.choices,
+      initial: setting.default,
+    })
   }
 
-  static async update(event: SubmitEvent | Event, form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
-    event.preventDefault()
-    event.stopPropagation()
+  async #save(form: HTMLFormElement): Promise<void> {
+    // `FormDataExtended` is what turns the form's strings back into the booleans and numbers the
+    // settings were registered as.
+    const submitted = new FormDataExtended(form).object as Record<string, unknown>
 
-    const data = foundry.utils.expandObject(formData) as Record<string, any>
+    for (const update of settingUpdates(submitted, GURPS.SYSTEM_NAME)) {
+      // The ids come from the settings the window itself listed, but they are strings as far as the
+      // types are concerned, and the registry is keyed by literal.
+      await game.settings!.set(GURPS.SYSTEM_NAME, update.id as never, update.value as never)
+    }
 
-    data
-      .keys()
-      .toArray()
-      .forEach(async (key: any) => {
-        const namespace = key.split('.')[0]
-        const settingId = key.split('.').slice(1).join('.')
-
-        if (namespace !== GURPS.SYSTEM_NAME) {
-          console.warn(`GURPS | GurpsSettingsApplication.update: Skipping setting ${key} with namespace ${namespace}`)
-
-          return
-        }
-
-        await game.settings!.set(GURPS.SYSTEM_NAME, settingId, data.object[key])
-      })
+    await this.close()
   }
 }
