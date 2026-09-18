@@ -1,4 +1,3 @@
-import { AnyMutableObject } from 'fvtt-types/utils'
 import { ResourceTrackerTemplate } from 'module/resource-tracker/types.ts'
 import { GurpsActor } from './module/actor/actor.js'
 import { GurpsCombatant } from './module/combat/combatant.ts'
@@ -6,6 +5,7 @@ import { GurpsItem } from './module/item.js'
 import { GurpsToken } from './module/token/gurps-token.ts'
 import { ManeuverDetail, ManeuverVisibility, RangeStrategy, RollBasedOnManeuverPolicy } from 'module/combat/types.ts'
 import { GurpsRange } from 'module/combat/ranges.js'
+import { QuickRollSettingsData } from 'module/token/quick-roll-settings-view.ts'
 
 export {}
 
@@ -209,7 +209,7 @@ declare global {
     'gurps.bucket-position': 'left' | 'right'
     'gurps.resource-tracker.manager': new (options?: any) => ResourceTracker.TemplateManager
     'gurps.resource-tracker.templates': Record<string, ResourceTrackerTemplate>
-    'gurps.use-quick-rolls': AnyMutableObject
+    'gurps.use-quick-rolls': QuickRollSettingsData
     'gurps.combat.rangeStrategy': RangeStrategy
     'gurps.combat.use-on-target': boolean
     'gurps.combat.maneuver-visibility': ManeuverVisibility
