@@ -3427,3 +3427,34 @@ button.quick-roll-button.sm.atk {
   height: 25px;
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
 }
+
+/*
+ * Slam calculator.
+ *
+ * These rules were inline `style` attributes on the Handlebars template; the Svelte component names
+ * them instead, so the layout is editable from the stylesheet like the rest of the application.
+ */
+#slam-calculator .slam-rules {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  align-self: center;
+  gap: 0.5em;
+}
+
+#slam-calculator .slam-side {
+  height: unset;
+  border: none;
+}
+
+#slam-calculator .slam-side + .slam-side {
+  padding-top: 0.5em;
+}
+
+#slam-calculator .slam-total {
+  height: unset;
+  border: none;
+  border-top: 1px solid #999;
+  margin: 0.5em 0;
+  padding-top: 0.5em;
+}
