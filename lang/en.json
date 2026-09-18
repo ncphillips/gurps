@@ -197,8 +197,10 @@
     "carryOnBack": "Carry on Back",
     "changelog": {
       "dontShowAgain": "Don't show README again",
+      "loading": "Loading the changelog...",
       "readme": "README",
-      "title": "GURPS"
+      "title": "GURPS",
+      "unavailable": "The changelog could not be loaded."
     },
     "characterImport": "Import Character Library",
     "chatClearing": "Clearing",

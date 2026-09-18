@@ -2268,7 +2268,7 @@ if (!globalThis.GURPS) {
       if (game.settings.get(GURPS.SYSTEM_NAME, Settings.SETTING_SHOW_CHANGELOG)) {
         const app = new ChangeLogWindow(changelogVersion)
 
-        app.render(true)
+        app.render({ force: true })
       }
 
       GURPS.executeOTF('/help')
