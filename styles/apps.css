@@ -3485,3 +3485,30 @@ button.quick-roll-button.sm.atk {
   width: auto;
   cursor: pointer;
 }
+
+/*
+ * Split DR editor.
+ *
+ * As with the move mode editor, the component drops the custom-type field rather than collapsing
+ * it, and these are the template's former inline styles.
+ */
+.splitdr-editor .type-column {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.splitdr-editor .type-column select {
+  width: 100%;
+}
+
+.splitdr-editor input.centered {
+  text-align: center;
+}
+
+.splitdr-editor button.delete-split {
+  background: none;
+  border: none;
+  padding: 6px 20px 0 10px;
+  width: auto;
+  cursor: pointer;
+}

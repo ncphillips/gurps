@@ -75,6 +75,7 @@ const damageTypeMap = {
 
 export class DamageTable {
   constructor() {
+    /** @type {Record<string, string>} */
     let translationTable = {}
     translationTable[game.i18n.localize('GURPS.damageAbbrevburn')] = 'burn'
     translationTable[game.i18n.localize('GURPS.damageAbbrevcor')] = 'cor'

@@ -1811,7 +1811,7 @@ export class GurpsActorSheet extends ActorSheet {
   async _onClickSplit(event) {
     let element = event.currentTarget
     let key = element.dataset.key
-    new SplitDREditor(this.actor, key).render(true)
+    new SplitDREditor(this.actor, key).render({ force: true })
   }
 
   async _onNavigate(event) {

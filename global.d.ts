@@ -53,6 +53,8 @@ declare global {
 
     DamageTables: {
       translate(damageType: string): string
+      /** The current language's damage abbreviations, mapped to the codes the system stores. */
+      translationTable: Record<string, string>
       woundModifiers: Record<
         string,
         { label?: string; icon?: string; color?: string; multiplier?: number; resource?: boolean }
