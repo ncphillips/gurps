@@ -27,6 +27,9 @@ export type TrackerInstance = {
   value: number
   isDamageType: boolean
   isDamageTracker: boolean
+  /** Whether the tracker refuses to go below its minimum, or above its maximum. */
+  isMinimumEnforced?: boolean
+  isMaximumEnforced?: boolean
   breakpoints: boolean
   thresholds: ResourceTrackerThreshold[]
 }

@@ -1206,6 +1206,7 @@
     "resourceEditTracker": "Edit Tracker",
     "resourceEnforceMaximum": "Enforce Maximum",
     "resourceEnforceMinimum": "Enforce Minimum",
+    "resourceName": "Resource Name",
     "resourceInvalidAlias": "Invalid alias [{alias}].<br/>Only alphabet and number characters, plus ('+', '_', and '-'), are allowed.",
     "resourcesModsTab": "Resources and Modifiers",
     "resourceTemplateAlias": "Alias",

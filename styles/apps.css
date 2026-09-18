@@ -3512,3 +3512,66 @@ button.quick-roll-button.sm.atk {
   width: auto;
   cursor: pointer;
 }
+
+/*
+ * Resource tracker editor.
+ *
+ * The Svelte component names these where the Handlebars template repeated them as inline `style`
+ * attributes -- the checkbox row's hanging indent was written out seven times.
+ */
+.resource-editor {
+  border: none;
+  position: relative;
+}
+
+.resource-editor .editor-body {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.resource-editor .grid-2col .inputs {
+  margin: 0;
+}
+
+.resource-editor .checkbox-row {
+  display: block;
+  padding-left: 15px;
+  text-indent: -15px;
+  white-space: normal;
+}
+
+.resource-editor .grid-2col .checkbox-row {
+  grid-column: 1 / span 2;
+}
+
+.resource-editor .checkbox-row.spaced {
+  margin-top: 10px;
+}
+
+.resource-editor .checkbox-row input[type='checkbox'] {
+  width: 15px;
+  height: 15px;
+  padding: 0;
+  margin: 0;
+  vertical-align: bottom;
+  position: relative;
+  top: -1px;
+}
+
+.resource-editor .threshold-scroll {
+  overflow-y: auto;
+  height: 16em;
+}
+
+.resource-editor .threshold select.comparison {
+  font-size: 120%;
+}
+
+.resource-editor .editor-footer {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  width: -webkit-fill-available;
+  padding: 0.5rem 8px 0 8px;
+  margin: 0 -8px;
+}
