@@ -259,7 +259,10 @@ describe('utilities', () => {
       const start = Date.now()
       await utilities.wait(100)
       const end = Date.now()
-      expect(end - start).toBeGreaterThanOrEqual(100)
+      // `setTimeout` schedules against a clock of its own, so it can fire a millisecond before
+      // `Date.now()` agrees that the delay has passed. Without the tolerance this fails now and
+      // again for no reason.
+      expect(end - start).toBeGreaterThanOrEqual(99)
     })
   })
 

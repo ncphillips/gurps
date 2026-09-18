@@ -5,3 +5,18 @@
 - Unit tests can be run via `npm run tdd` or `npm run test`. I would prefer you install the Node TDD extension and configure it to run on every file save. Never push code to the dev branch if any unit test is failing, or they can't run for any reasson.
 - All changes should be submitted as a PR and reviewed by either Chris (Nose) or Jeff (Nick Coffin, PI).
 - Use the wiki for development discussions, especially about refactoring or new features. https://github.com/crnormand/gurps/wiki/Development-Discussion
+
+## Building
+
+`npm run build` produces `dist/`, which is what a world loads. Vite bundles the system into
+`dist/module/gurps.js` -- the entry `system.json` names -- so that the user interface can be written
+in Svelte; `tsc` is now only the type checker, behind `npm run typecheck`, alongside `svelte-check`.
+
+`npm run dev` rebuilds on change.
+
+## Svelte
+
+The user interface is moving from Handlebars templates to Svelte 5 components, one application at a
+time; both run side by side, and an unconverted Handlebars application needs no changes. See
+[`module/svelte/README.md`](module/svelte/README.md) for how to convert one and what the
+conventions are.
