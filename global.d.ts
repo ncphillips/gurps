@@ -209,6 +209,8 @@ declare global {
 
   interface SettingConfig {
     'gurps.bucket-position': 'left' | 'right'
+    /** The journal page ids the modifier bucket offers, keyed by position. */
+    'gurps.bucket-journals': Record<string, string>
     'gurps.resource-tracker.manager': new (options?: any) => ResourceTracker.TemplateManager
     'gurps.resource-tracker.templates': Record<string, ResourceTrackerTemplate>
     'gurps.use-quick-rolls': QuickRollSettingsData
