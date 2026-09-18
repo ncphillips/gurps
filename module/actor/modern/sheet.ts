@@ -191,7 +191,7 @@ export class GurpsActorModernSheet extends GurpsActorSheet {
     }
 
     html.find('.ms-move-mode-edit').on('click', () => {
-      new MoveModeEditor(this.actor).render(true)
+      new MoveModeEditor(this.actor).render({ force: true })
     })
     bindDropdownToggle(html, {
       dropdownSelector: '.ms-move-mode-dropdown',

@@ -3458,3 +3458,30 @@ button.quick-roll-button.sm.atk {
   margin: 0.5em 0;
   padding-top: 0.5em;
 }
+
+/*
+ * Move mode editor.
+ *
+ * The Svelte component drops the row's custom-mode field instead of collapsing it, so the
+ * `.contracted` rule above no longer applies here; these are the template's former inline styles.
+ */
+.move-mode-editor .mode-column {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.move-mode-editor .mode-column select {
+  width: 100%;
+}
+
+.move-mode-editor input.centered {
+  text-align: center;
+}
+
+.move-mode-editor button.delete-mode {
+  background: none;
+  border: none;
+  padding: 6px 20px 0 10px;
+  width: auto;
+  cursor: pointer;
+}

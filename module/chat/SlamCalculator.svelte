@@ -26,11 +26,7 @@
   const targetName = $derived(target?.name ?? t('GURPS.target'))
 </script>
 
-<form
-  class="gga-app"
-  autocomplete="off"
-  onsubmit={event => (event.preventDefault(), onresolve($state.snapshot(form)))}
->
+<form class="gga-app" autocomplete="off" onsubmit={event => (event.preventDefault(), onresolve($state.snapshot(form)))}>
   <h2>
     {attackerName}
     <i>

@@ -1150,7 +1150,7 @@ export class GurpsActorSheet extends ActorSheet {
 
   async _showMoveModeEditorPopup(ev) {
     ev.preventDefault()
-    new MoveModeEditor(this.actor).render(true)
+    new MoveModeEditor(this.actor).render({ force: true })
   }
 
   async editEquipment(actor, path, obj) {

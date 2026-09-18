@@ -2,6 +2,7 @@
 
 import { Combat } from '../combat/index.js'
 import { collectDeletions } from './deletion.js'
+import { MoveModes } from './move-modes.js'
 import { commitUpdate, replaceValue } from '../utilities/foundry-compat.js'
 import { calculateEncumbranceLevels } from '../utilities/import-utilities.js'
 import * as Settings from '../../lib/miscellaneous-settings.js'
@@ -43,12 +44,9 @@ Hooks.on('createActor', async function (/** @type {Actor} */ actor) {
   await actor.internalUpdate({ '_stats.systemVersion': game.system.version })
 })
 
-export const MoveModes = {
-  Ground: 'GURPS.moveModeGround',
-  Air: 'GURPS.moveModeAir',
-  Water: 'GURPS.moveModeWater',
-  Space: 'GURPS.moveModeSpace',
-}
+// Re-exported so the many importers of `actor.js` keep working; the definition moved out so that
+// importing it does not drag the actor's hook registrations along with it.
+export { MoveModes }
 
 const ROLL_TYPE = {
   MELEE: 'm',
