@@ -43,3 +43,14 @@ export function currentMove(basicMove: number, encumbranceLevel: number, conditi
   if (conditions.exhausted) move = Math.ceil(move / 2)
   return move
 }
+
+/**
+ * The distance a character can step: 1/10 of Move, never less than one yard, rounding up (B368).
+ *
+ * `move` is the Move score -- Basic Move after encumbrance and the conditions -- and deliberately
+ * not the Move a posture or maneuver has left. B387: a step is your full step "regardless of
+ * facing, posture, or terrain."
+ */
+export function step(move: number): number {
+  return Math.max(1, Math.ceil(move / 10))
+}

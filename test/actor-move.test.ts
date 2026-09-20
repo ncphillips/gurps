@@ -1,4 +1,4 @@
-import { currentMove, fractionOfMove } from '../module/actor/move.js'
+import { currentMove, fractionOfMove, step } from '../module/actor/move.js'
 
 /**
  * B9 sets the default: when math decides "what a character can do," fractions round *down*, and
@@ -70,5 +70,36 @@ describe('currentMove', () => {
   // and encumbrance then cuts that to 5.
   test('a reeling character under Light encumbrance', () => {
     expect(currentMove(14, 1, { reeling: true })).toBe(6)
+  })
+})
+
+/**
+ * B368: "You may step a distance equal to 1/10 your Move, but never less than one yard. Round all
+ * fractions *up*. Thus, Move 1-10 gives a one-yard step, Move 11-20 gives a two-yard step."
+ *
+ * "Your Move" is the Move score -- Basic Move after encumbrance (B17) and after reeling (B380) and
+ * fatigue (B426) -- not Basic Move. It is not reduced further by whatever posture or maneuver is
+ * holding Move back: B387 says a step is your full step "regardless of facing, posture, or
+ * terrain."
+ */
+describe('step', () => {
+  it('gives a Move 5 character a one-yard step', () => {
+    expect(step(5)).toBe(1)
+  })
+
+  it('gives a Move 10 character a one-yard step', () => {
+    expect(step(10)).toBe(1)
+  })
+
+  it('gives a Move 11 character a two-yard step', () => {
+    expect(step(11)).toBe(2)
+  })
+
+  it('gives a Move 20 character a two-yard step', () => {
+    expect(step(20)).toBe(2)
+  })
+
+  it('gives a Move 0 character a one-yard step', () => {
+    expect(step(0)).toBe(1)
   })
 })

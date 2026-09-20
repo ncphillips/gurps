@@ -58,7 +58,7 @@ function registerTokenRuler() {
       if (yards === 0) {
         return defaultColor
         // @ts-expect-error: waiting for actor update to DataModel
-      } else if (yards <= Math.ceil(actor.system.currentmove / 10)) {
+      } else if (yards <= actor.system.currentstep) {
         return tokenMoveColors.step
         // @ts-expect-error: waiting for actor update to DataModel
       } else if (yards <= actor.system.currentmove) {

@@ -17,6 +17,7 @@
 - Compendium Packs / Import Equipment Library / Skill Level is populating as S:"["object Object]\*[] \#2942
 - A posture or maneuver that allows a fraction of Move rounded that fraction up. A crouching Move 5 character now moves 3 yards, not 4 (B9, B551, B387).
 - Reeling and fatigue halved Move before encumbrance reduced it. Encumbrance now goes first, as B17 defines Move (a Basic Move 14 character under Light encumbrance and reeling has Move 6, not 5).
+- A step was 1/10 of Basic Move, ignoring encumbrance, reeling and fatigue. It is now 1/10 of Move (B368), and the token ruler's step band reads the same number.
 
 ## Release 0.18.23 08/29/2026
 

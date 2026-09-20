@@ -36,7 +36,7 @@ import { Advantage, Equipment, HitLocationEntry, Melee, Ranged, Skill, Spell } f
 import { ActorImporter } from './actor-importer.js'
 import { collectDeletions } from './deletion.js'
 import { cleanTags, getRangedModifier, getSizeModifier } from './effect-modifier-popout.js'
-import { currentMove, fractionOfMove } from './move.js'
+import { currentMove, fractionOfMove, step } from './move.js'
 
 // Ensure that ALL actors has the current version loaded into them (for migration purposes)
 Hooks.on('createActor', async function (/** @type {Actor} */ actor) {
@@ -809,6 +809,7 @@ export class GurpsActor extends Actor {
         const move = currentMove(basicMove, parseInt(enc.level), { reeling: isReeling, exhausted: isTired })
 
         enc.currentmove = this._getCurrentMove(move, parseInt(enc.level))
+        enc.currentstep = step(move)
         enc.currentdodge = isNaN(effectiveDodge) ? '–' : Math.max(1, effectiveDodge - parseInt(enc.level))
         enc.currentsprint = Math.max(enc.currentmove + 1, Math.floor(effectiveSprint * threshold))
         enc.currentmovedisplay = enc.currentmove
@@ -821,6 +822,7 @@ export class GurpsActor extends Actor {
           data.currentmove = enc.currentmove
           data.currentdodge = enc.currentdodge
           data.currentsprint = enc.currentsprint
+          data.currentstep = enc.currentstep
         }
       }
     }
@@ -899,13 +901,13 @@ export class GurpsActor extends Actor {
 
       case MOVE_STEP:
         return {
-          move: this._getStep(),
+          move: step(move),
           text: game.i18n.localize('GURPS.step'),
         }
 
       case MOVE_TWO_STEPS:
         return {
-          move: this._getStep() * 2,
+          move: step(move) * 2,
           text: game.i18n.localize('GURPS.stepOrTwo'),
         }
 
@@ -1030,11 +1032,6 @@ export class GurpsActor extends Actor {
         }
       }
     })
-  }
-
-  _getStep() {
-    let step = Math.ceil(parseInt(this.system.basicmove.value.toString()) / 10)
-    return Math.max(1, step)
   }
 
   /**
