@@ -808,6 +808,10 @@ export class GurpsActor extends Actor {
         // Encumbrance takes its share of Basic Move before reeling and fatigue take theirs (B17).
         const move = currentMove(basicMove, parseInt(enc.level), { reeling: isReeling, exhausted: isTired })
 
+        // The Move no posture or maneuver has touched yet. Anything that needs to apply one of
+        // those fractions itself has to start here, or it applies it to a number that already has
+        // it -- see TokenActions#getMaxMove.
+        enc.fullmove = move
         enc.currentmove = this._getCurrentMove(move, parseInt(enc.level))
         enc.currentstep = step(move)
         enc.currentdodge = isNaN(effectiveDodge) ? '–' : Math.max(1, effectiveDodge - parseInt(enc.level))
@@ -819,6 +823,7 @@ export class GurpsActor extends Actor {
         enc.currentmovedisplay = this._isEnhancedMove() ? enc.currentmove + '/' + enc.currentsprint : enc.currentmove
         if (enc.current) {
           // Save the global move/dodge
+          data.fullmove = enc.fullmove
           data.currentmove = enc.currentmove
           data.currentdodge = enc.currentdodge
           data.currentsprint = enc.currentsprint

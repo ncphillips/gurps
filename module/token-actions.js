@@ -1,5 +1,6 @@
 import * as Settings from '../lib/miscellaneous-settings.js'
 import { recurselist } from '../lib/utilities.js'
+import { maneuverMove } from './actor/move.js'
 import Maneuvers, {
   MOVE_FULL,
   MOVE_HALF,
@@ -292,6 +293,9 @@ export class TokenActions {
 
   getMaxMove() {
     let currentMove = this.actor.system.currentmove
+    // The maneuver's fraction is taken out of the Move nothing has limited yet, then clamped back
+    // to what the actor actually has -- currentmove may already carry this same fraction.
+    let fullMove = this.actor.system.fullmove ?? currentMove
     const maneuver = Maneuvers.getManeuver(this.currentManeuver || 'do_nothing')
     const move = maneuver.flags.gurps.move
 
@@ -305,11 +309,11 @@ export class TokenActions {
       case MOVE_TWO_STEPS:
         return game.i18n.format('GURPS.moveTwoSteps', { reason: game.i18n.localize(maneuver.label) })
       case MOVE_ONETHIRD:
-        return Math.max(Math.floor(currentMove / 3), 1)
+        return maneuverMove(fullMove, currentMove, 1, 3)
       case MOVE_HALF:
-        return Math.max(Math.floor(currentMove / 2), 1)
+        return maneuverMove(fullMove, currentMove, 1, 2)
       case MOVE_TWOTHIRDS:
-        return Math.max(Math.floor((currentMove / 3) * 2), 1)
+        return maneuverMove(fullMove, currentMove, 2, 3)
       case MOVE_FULL:
         if (this.currentManeuver === 'move' && this.lastManeuvers[this.currentTurn]?.maneuver === 'move') {
           return currentMove + Math.max(Math.floor(currentMove * 0.2), 1)

@@ -54,3 +54,16 @@ export function currentMove(basicMove: number, encumbranceLevel: number, conditi
 export function step(move: number): number {
   return Math.max(1, Math.ceil(move / 10))
 }
+
+/**
+ * The furthest a token may move this turn under a maneuver that allows a fraction of Move.
+ *
+ * `fullMove` is the Move a posture or maneuver has not yet touched; `currentMove` is what the actor
+ * settled on after both. Taking the lower of the two is what makes this safe to ask twice: when
+ * "Maneuver Updates Move" is on, `currentMove` already has the maneuver's fraction taken out of it,
+ * and re-applying the fraction would take half of a half. It also keeps a posture that holds Move
+ * below what the maneuver allows in force.
+ */
+export function maneuverMove(fullMove: number, currentMove: number, numerator: number, denominator: number): number {
+  return Math.min(fractionOfMove(fullMove, numerator, denominator), currentMove)
+}

@@ -1,4 +1,4 @@
-import { currentMove, fractionOfMove, step } from '../module/actor/move.js'
+import { currentMove, fractionOfMove, maneuverMove, step } from '../module/actor/move.js'
 
 /**
  * B9 sets the default: when math decides "what a character can do," fractions round *down*, and
@@ -101,5 +101,27 @@ describe('step', () => {
 
   it('gives a Move 0 character a one-yard step', () => {
     expect(step(0)).toBe(1)
+  })
+})
+
+/**
+ * The Combat Tracker's maneuver menu shows how far a token may move, and works it out from the
+ * maneuver's fraction (B365, B366) rather than reading system.currentmove. But currentmove has
+ * already had that same fraction taken out of it when "Maneuver Updates Move" is on, so applying it
+ * again took half of a half. Taking the lower of the two numbers instead is idempotent, and still
+ * respects a posture holding Move below what the maneuver allows.
+ */
+describe('maneuverMove', () => {
+  it('allows half of an unrestricted Move 5', () => {
+    expect(maneuverMove(5, 5, 1, 2)).toBe(2)
+  })
+
+  test("the actor has already taken the maneuver's half out of its Move", () => {
+    expect(maneuverMove(5, 2, 1, 2)).toBe(2)
+  })
+
+  // A kneeling Move 5 character has Move 1. Aiming does not give them back a second yard.
+  test('a posture holds Move below what the maneuver allows', () => {
+    expect(maneuverMove(5, 1, 1, 2)).toBe(1)
   })
 })
